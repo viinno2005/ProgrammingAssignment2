@@ -3,12 +3,25 @@
 # repeatedly.
 # We will write two functions which achieve above.
 
-## Write a short comment describing this function
-
 # makeCacheMatrix: This function creates a special "matrix" object
 #                  that can cache its inverse.
 makeCacheMatrix <- function(x = matrix()) {
-        
+        mInverse <- NULL
+        #set matrix if new matrix is passed.
+        setMatrix <- function(y) {
+                x <<- y
+                mInverse <<- NULL
+        }
+        # get existing matrix
+        getMatrix <- function() x
+        # set matrix inverse value
+        setInverse <- function(inverse) mInverse <<- inverse
+        # get existing inverse value
+        getInverse <- function() mInverse
+        # list of all methods.
+        list(set = setMatrix, get = getMatrix,
+             setInverse = setInverse,
+             getInverse = getInverse)
 }
 
 # cacheSolve: This function computes the inverse of the special
@@ -17,6 +30,18 @@ makeCacheMatrix <- function(x = matrix()) {
 #               (and the matrix has not changed), then cacheSolve
 #               should retrieve the inverse from the cache.
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
-        
+        # get matrix inverse value
+        mInverse <- x$getInverse()
+        # check if inverse exists. If exists return existing value.
+        if(!is.null(mInverse)) {
+                message("getting cached matrix inverse")
+                return(mInverse)
+        }
+        # get stored data.
+        data <- x$get()
+        # calculate matrix inverse.
+        mInverse <- solve(data, ...)
+        # set calculated inverse value.
+        x$setInverse(mInverse)
+        mInverse
 }
